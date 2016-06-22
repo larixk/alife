@@ -15,32 +15,32 @@
 
     function init () {
         createView();
-        create();
-    }
-    function create() {
         createLife();
         update();
     }
+
     function createView() {
-        config.worldSize.width = $('.container').width();
-        config.worldSize.height = $('.container').height();
+        config.worldSize.width = document.querySelector('.container').offsetWidth;
+        config.worldSize.height = document.querySelector('.container').offsetHeight;
 
-        $canvas = $('<canvas />');
-        $canvas.attr('width', config.worldSize.width);
-        $canvas.attr('height', config.worldSize.height);
+        $canvas = document.createElement('canvas');
+        $canvas.width = config.worldSize.width;
+        $canvas.height = config.worldSize.height;
 
-        ctx = $canvas[0].getContext('2d');
+        ctx = $canvas.getContext('2d');
 
-        $('.container').append($canvas);
+        document.querySelector('.container').appendChild($canvas);
     }
 
     function createLife() {
         survivors = [];
-        for (var i = 0; i < 100; i++) {
+        var numOrganisms = config.worldSize.width * config.worldSize.height / 1000;
+        for (var i = 0; i < numOrganisms; i++) {
             createOrganism();
         }
         life = survivors;
     }
+
     function rayHit(ray, target, leng) {
         var tVec = {
             x: ray.direction.x * (target.c.x - ray.a.x),
@@ -81,7 +81,7 @@
             angle: Math.PI * 2 * Math.random(),
             angleDeviation: 0,
             color: '',
-            vision: 7,
+            vision: Math.random() * 5 + 2,
             size: Math.random() * 5 + 5,
             hp: 10,
             recalculateAngle: function () {
@@ -160,7 +160,7 @@
 
                 if (closestTarget && minFollowDistance < this.size) {
                     closestTarget.hp = 0;
-                    this.size *= 1.1;
+                    this.size *= 1.2;
                 }
             },
             create: function () {
@@ -211,14 +211,13 @@
     }
 
     function clearCanvas () {
-        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
         ctx.fillRect(0,0,config.worldSize.width,config.worldSize.height);
-
-        // $canvas.attr('width', $canvas.attr('width'));
-
     }
 
     function update() {
+        requestAnimationFrame(update);
+
         clearCanvas();
         survivors = [];
         for (var i in life) {
@@ -230,7 +229,6 @@
             createOrganism();
         }
         life = survivors;
-        requestAnimationFrame(update);
     }
     init();
 })();
