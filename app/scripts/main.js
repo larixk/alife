@@ -34,7 +34,7 @@
 
     function createLife() {
         survivors = [];
-        var numOrganisms = config.worldSize.width * config.worldSize.height / 1000;
+        var numOrganisms = config.worldSize.width * config.worldSize.height / 10000;
         for (var i = 0; i < numOrganisms; i++) {
             createOrganism();
         }
@@ -81,7 +81,7 @@
             angle: Math.PI * 2 * Math.random(),
             angleDeviation: 0,
             color: '',
-            vision: Math.random() * 5 + 2,
+            vision: Math.random() * 10 + 1,
             size: Math.random() * 5 + 5,
             hp: 10,
             recalculateAngle: function () {
@@ -116,7 +116,7 @@
                 var closestTarget = false;
 
                 for (var feelerIndex = 0; feelerIndex < 2; feelerIndex++){
-                    var visionAngle = Math.PI * -0.5 + feelerIndex * Math.PI + (this.angle + (Math.random() - 0.5) * Math.PI * 1);
+                    var visionAngle = Math.PI * -0.5 + feelerIndex * Math.PI + (this.angle + (Math.random() - 0.5) * Math.PI * 0.5);
                     var visionDirection = {
                         x: Math.cos(visionAngle),
                         y: Math.sin(visionAngle)
@@ -160,7 +160,7 @@
 
                 if (closestTarget && minFollowDistance < this.size) {
                     closestTarget.hp = 0;
-                    this.size *= 1.2;
+                    this.size *= 1.1;
                 }
             },
             create: function () {
@@ -176,6 +176,7 @@
                 // Meander a bit
                 this.angleDeviation *= 0.8;
                 this.angleDeviation += (Math.random() - 0.5) * 0.1;
+                this.angleDeviation *= this.speed / 2;
 
                 this.acceleration = -0.02;
                 if (Math.random() > 0.99) {
